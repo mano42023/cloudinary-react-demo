@@ -2,7 +2,23 @@
 
 next steps
 
-* button to upload an image. use filename as the image name.
+the script
+
+* say, "good morning". nothing gets parsed.
+* upload image
+* please show the image
+* please set the width to 500
+* Since we are all using chrome, please display the image in webp format
+* that doesn't look right. please auto-contrast and auto-sharpen
+* it should be centered. please make it square and center the dress
+* please overlay acme_logo at the south-west corner
+*
+
+
+
+TODOS:
+
+* //button to upload an image. use filename as the image name.
 * make it remember the previously set commands
 * figure out the pad crop with auto action. it should center the image on the point of interest
 * find a demo image that works. like the dress
@@ -45,7 +61,7 @@ class App extends Component {
             text:text
         };
         if(action !== false) {
-            var url = ParserService.actionToURL(action);
+            var url = ParserService.actionToURL(action,{path:ImageService.getImagePath()});
             console.log("got the url",url);
             payload.cloudinaryLink = url;
         }
@@ -90,7 +106,11 @@ class App extends Component {
     showUploader() {
         var cloudinary = window.cloudinary;
         cloudinary.openUploadWidget({ cloud_name: 'pubnub', upload_preset: 'mcipauzl'},
-            function(error, result) { console.log(error, result) });
+            (error, result) => {
+                console.log(error, result);
+                console.log("the upload path is", result[0].path);
+                ImageService.setImagePath(result[0].path);
+            });
     }
 }
 

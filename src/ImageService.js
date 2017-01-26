@@ -17,6 +17,12 @@ var service = {
         });
         this.pubnub.subscribe({channels:['cloudinary-test']});
     },
+    setImagePath: function(path) {
+        this.imagePath = path;
+    },
+    getImagePath: function() {
+        return this.imagePath;
+    },
     onMessage:function(cb) {
         this.cbs.push(cb);
     },
