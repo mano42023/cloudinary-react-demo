@@ -28,7 +28,7 @@ var service = {
     send: function(text) {
         console.log("text = ",text);
         var payload = {
-            "transformations": ["w_200","h_150"],
+            "transformations": ["w_200","h_350"],
             "image": "sample.jpg",
             "cloudName":"pubnub",
             "operation":"upload",
