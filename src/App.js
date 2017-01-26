@@ -1,3 +1,14 @@
+/*
+
+next steps
+
+* button to upload an image. use filename as the image name.
+* make it remember the previously set commands
+* figure out the pad crop with auto action. it should center the image on the point of interest
+* find a demo image that works. like the dress
+* upload an acme logo at a small size, so we don't have to specify the scale
+* move the parser service into a block
+ */
 import React, { Component } from 'react';
 import './App.css';
 import ImageService from "./ImageService";
@@ -70,9 +81,16 @@ class App extends Component {
                            onKeyDown={this.textKeydown.bind(this)}
                     />
                     <button onClick={this.sendMessage.bind(this)}>send</button>
+                    <button onClick={this.showUploader.bind(this)}>Upload Image</button>
                 </div>
             </div>
         );
+    }
+
+    showUploader() {
+        var cloudinary = window.cloudinary;
+        cloudinary.openUploadWidget({ cloud_name: 'pubnub', upload_preset: 'mcipauzl'},
+            function(error, result) { console.log(error, result) });
     }
 }
 
