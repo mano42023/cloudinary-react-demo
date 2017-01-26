@@ -55,12 +55,16 @@ function testParser() {
     test("Please overlay acme-logo at south_west corner",{
         action:'overlay',
         target:'acme-logo',
-        direction:'south_west'
+        direction:'southwest'
+    });
+    test("please overlay the acme_logo in the south-west corner", {
+        action:'overlay', target:'acme_logo',direction:'southwest'
     });
 }
 
+var ctx = {path:"sample.jpg"}
 function testAction(action, expected) {
-    var result = ParserService.actionToURL(action,{path:"sample.jpg"});
+    var result = ParserService.actionToURL(action,ctx);
     console.log(result);
     assert.deepEqual(expected,result);
 }
@@ -71,27 +75,20 @@ function testActions() {
         "http://res.cloudinary.com/pubnub/image/upload/sample.jpg");
     testAction({action:'format',format:'webp'},
         "http://res.cloudinary.com/pubnub/image/upload/sample.webp");
+    testAction({action:'format',format:'jpg'},
+        "http://res.cloudinary.com/pubnub/image/upload/sample.jpg");
     testAction({action:'resize',size:150, axis:'width'},
         "http://res.cloudinary.com/pubnub/image/upload/w_150/sample.jpg");
     testAction({action:"compound", actions:[{action:'autoContrast'},{action:'autoSharpen'}]},
-        "http://res.cloudinary.com/pubnub/image/upload/e_auto_contrast/e_sharpen/sample.jpg");
+        "http://res.cloudinary.com/pubnub/image/upload/w_150/e_auto_contrast/e_sharpen/sample.jpg");
+    ctx = {path:"sample.jpg",width:200};
     testAction({action:'crop', gravity:'auto', shape:'square'},
-        "http://res.cloudinary.com/pubnub/image/upload/w_200,h_200,c_fill,g_auto/sample.jpg");
-
-    //testAction(    {
-    //        action:"pad",
-    //        gravity:"auto",
-    //        color:'black'
-    //    }
-    //    ,"http://res.cloudinary.com/pubnub/image/upload/w_200,h_300,c_fill,g_auto/sample.jpg");
+        "http://res.cloudinary.com/pubnub/image/upload/w_200/w_200,h_200,c_fill,g_auto/sample.jpg");
 
 
-    testAction({
-        action:'overlay',
-        target:'acme-logo',
-        direction:'south_west'
-    },
-        "http://res.cloudinary.com/pubnub/image/upload/l_sample,w_0.2,g_south_west/sample.jpg");
+    ctx = {path:"sample.jpg",width:200};
+    testAction({ action:'overlay', target:'acme-logo', direction:'south_west' },
+        "http://res.cloudinary.com/pubnub/image/upload/l_sample,w_0.2,g_south_west/w_200/sample.jpg");
 }
 
 

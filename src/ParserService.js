@@ -16,7 +16,7 @@ var service = {
         var n = words.findIndex((w) => w === 'please');
         var verb = words[n+1];
         var nextWord = words[n+2];
-        console.log("verb = ", n,verb);
+        console.log("verb = ", n,verb, nextWord);
 
         if(verb === 'upload') {
             return {
@@ -107,15 +107,18 @@ var service = {
         }
 
         if(verb === 'overlay') {
+            console.log("scanning words",words);
             var dir = words.slice(n).find((w)=>{
-                if(w == 'south_west') return true;
+                var ww = w.replace("_","").replace("-","");
+                if(ww == 'southwest') return true;
+                if(ww == 'south_west') return true;
+                if(ww == 'south-west') return true;
                 return false;
             });
-            nextWord = text.split(" ")[n+2];
             return {
                 action:'overlay',
                 target:nextWord,
-                direction:dir
+                direction:dir.replace("_","").replace("-","")
             }
         }
 
@@ -127,30 +130,31 @@ var service = {
         var cloudName = "pubnub";
         var resource = "image";
         var operation = "upload";
-        //var filename = "sample";
-        var filename = context.path.substring(0,context.path.lastIndexOf('.'));
-        var format = "jpg";
         var transforms = [];
 
+        //adjust the context
         if(command.action === 'show') {
         }
         if(command.action === 'format') {
-            format = command.format;
+            context.format = command.format;
         }
         if(command.action === 'resize') {
-            transforms.push("w_"+command.size);
+            context.width = command.size;
         }
         if(command.action === 'compound') {
             command.actions.forEach((cmd)=>{
-                if(cmd.action === 'autoContrast') transforms.push("e_auto_contrast");
-                if(cmd.action === 'autoSharpen') transforms.push("e_sharpen");
+                if(cmd.action === 'autoContrast') context.autoContrast = true;
+                if(cmd.action === 'autoSharpen') context.autoSharpen = true;
             });
         }
-        if(command.action === "pad") {
-            transforms.push("w_200,h_300,c_fill,"+"g_"+command.gravity);
-        }
+        //if(command.action === "pad") {
+        //    transforms.push("w_200,h_300,c_fill,"+"g_"+command.gravity);
+        //}
         if(command.action === 'crop') {
-            transforms.push("w_200,h_200,c_fill,g_"+command.gravity);
+            context.crop = true;
+            context.shape = 'square';
+            context.gravity = command.gravity;
+            //transforms.push("w_200,h_200,c_fill,g_"+command.gravity);
         }
 
         if(command.action === 'overlay') {
@@ -160,15 +164,36 @@ var service = {
             var scale = 1.0;
             scale = 0.2;
             var grav = command.direction;
+            if(command.direction === 'southwest') {
+                grav = 'south_west';
+            }
             transforms.push("l_"+fname+",w_"+scale+",g_"+grav);
         }
 
+
+        //apply the context
+        if(!context.format) context.format = 'jpg';
+        if(context.width) {
+            transforms.push("w_"+context.width);
+        }
+        if(context.autoContrast) transforms.push("e_auto_contrast");
+        if(context.autoSharpen) transforms.push("e_sharpen");
+        if(context.crop) {
+            transforms.push("w_"+context.width+",h_"+context.width
+                +",c_fill,g_"+context.gravity);
+        }
+
+        console.log("final context is",context);
+
+
+        //generate the final url
         let apiUrl = 'http://res.cloudinary.com/' +
             cloudName + '/' + resource + '/' + operation + '/';
         if(transforms.length > 0) {
             apiUrl += transforms.join("/") + "/"
         }
-        apiUrl += filename  + '.' + format;
+        var filename = context.path.substring(0,context.path.lastIndexOf('.'));
+        apiUrl += filename  + '.' + context.format;
         return apiUrl;
     }
 };

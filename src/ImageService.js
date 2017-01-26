@@ -16,6 +16,7 @@ var service = {
             }
         });
         this.pubnub.subscribe({channels:['cloudinary-test']});
+        this.imagePath = "sample.jpg";
     },
     setImagePath: function(path) {
         this.imagePath = path;

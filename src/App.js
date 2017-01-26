@@ -4,23 +4,22 @@ next steps
 
 the script
 
-* say, "good morning". nothing gets parsed.
-* upload image
-* please show the image
-* please set the width to 500
-* Since we are all using chrome, please display the image in webp format
-* that doesn't look right. please auto-contrast and auto-sharpen
-* it should be centered. please make it square and center the dress
-* please overlay acme_logo at the south-west corner
-*
+say, "good morning". nothing gets parsed.
+upload image
+please show the image
+please set the width to 500
+Since we are all using chrome, please display the image in webp format
+that doesn't look right. please auto-contrast and auto-sharpen
+it should be centered. please make it square and center the dress
+please overlay acme_logo at the south-west corner
 
 
 
 TODOS:
 
 * //button to upload an image. use filename as the image name.
-* make it remember the previously set commands
-* figure out the pad crop with auto action. it should center the image on the point of interest
+* //figure out the pad crop with auto action. it should center the image on the point of interest
+* //make it remember the previously set commands
 * find a demo image that works. like the dress
 * upload an acme logo at a small size, so we don't have to specify the scale
 * move the parser service into a block
@@ -43,6 +42,7 @@ class App extends Component {
                 messages:messages
             })
         });
+        this.ctx = {};
     }
     textEdit() {
         this.setState({currentText:this.refs.text.value});
@@ -61,7 +61,8 @@ class App extends Component {
             text:text
         };
         if(action !== false) {
-            var url = ParserService.actionToURL(action,{path:ImageService.getImagePath()});
+            this.ctx.path = ImageService.getImagePath();
+            var url = ParserService.actionToURL(action,this.ctx);
             console.log("got the url",url);
             payload.cloudinaryLink = url;
         }
