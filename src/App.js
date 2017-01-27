@@ -4,7 +4,7 @@ next steps
 
 the script
 
-say, "good morning". nothing gets parsed.
+good morning
 upload image
 please show the image
 please set the width to 500
