@@ -187,7 +187,7 @@ var service = {
 
 
         //generate the final url
-        let apiUrl = 'http://res.cloudinary.com/' +
+        var apiUrl = 'http://res.cloudinary.com/' +
             cloudName + '/' + resource + '/' + operation + '/';
         if(transforms.length > 0) {
             apiUrl += transforms.join("/") + "/"
