@@ -17,12 +17,20 @@ please overlay acme_logo at the south-west corner
 
 TODOS:
 
-* //button to upload an image. use filename as the image name.
-* //figure out the pad crop with auto action. it should center the image on the point of interest
-* //make it remember the previously set commands
+ //button to upload an image. use filename as the image name.
+ //figure out the pad crop with auto action. it should center the image on the point of interest
+ //make it remember the previously set commands
+ //move the parser service into a block
+
+improve error handling for parser service. never crash. send JSON errors only. including error status code that is shown to the user
+support 'please reset the image'
+support 'north west' and other directions
+support passthrough to not include the cloudinary url
+pull a copy of the block code into the repo
+
+
 * find a demo image that works. like the dress
 * upload an acme logo at a small size, so we don't have to specify the scale
-* move the parser service into a block
  */
 import React, { Component } from 'react';
 import './App.css';
@@ -58,7 +66,9 @@ class App extends Component {
         this.setState({currentText:""});
     }
     scrollDown() {
-        //document.getElementById('scroll');
+        setTimeout(()=>{
+            document.getElementById('scroll').scrollTop = 100000;
+        },100);
     }
 
     renderHistory() {
