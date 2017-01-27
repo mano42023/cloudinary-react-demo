@@ -17,12 +17,20 @@ please overlay acme_logo at the south-west corner
 
 TODOS:
 
-* //button to upload an image. use filename as the image name.
-* //figure out the pad crop with auto action. it should center the image on the point of interest
-* //make it remember the previously set commands
+ //button to upload an image. use filename as the image name.
+ //figure out the pad crop with auto action. it should center the image on the point of interest
+ //make it remember the previously set commands
+ //move the parser service into a block
+
+improve error handling for parser service. never crash. send JSON errors only. including error status code that is shown to the user
+support 'please reset the image'
+support 'north west' and other directions
+support passthrough to not include the cloudinary url
+pull a copy of the block code into the repo
+
+
 * find a demo image that works. like the dress
 * upload an acme logo at a small size, so we don't have to specify the scale
-* move the parser service into a block
  */
 import React, { Component } from 'react';
 import './App.css';
@@ -33,14 +41,15 @@ class App extends Component {
         super(props);
         this.state = {
             messages:[],
-            currentText:""
+            currentText:"please overlay acme_logo at the south-west corner"
         };
 
         ImageService.init();
         ImageService.onMessage((msg, messages) => {
             this.setState({
                 messages:messages
-            })
+            });
+            this.scrollDown();
         });
         this.ctx = {};
     }
@@ -53,43 +62,28 @@ class App extends Component {
         }
     }
     sendMessage() {
-        console.log("-------------");
-        var text = this.state.currentText;
-        var action = ParserService.parse(text);
-        console.log("using the action",action);
-        var payload = {
-            text:text
-        };
-        if(action !== false) {
-            this.ctx.path = ImageService.getImagePath();
-            var url = ParserService.actionToURL(action,this.ctx);
-            console.log("got the url",url);
-            payload.cloudinaryLink = url;
-        }
-        //ImageService.send(this.state.currentText);
-        setTimeout(()=>{
-            this.setState({
-                messages:[payload]
-            })
-        },500);
+        ImageService.send(this.state.currentText);
         this.setState({currentText:""});
+    }
+    scrollDown() {
+        setTimeout(()=>{
+            document.getElementById('scroll').scrollTop = 100000;
+        },100);
     }
 
     renderHistory() {
         var items = this.state.messages.map((msg,i)=>{
-            var items = [];
-            items.push(msg.text);
-            if(msg.cloudinaryLink) {
-                items.push(<img key='img' src={msg.cloudinaryLink}/>);
-            }
-            return <li key={i}>message: {items}</li>
+            return <li key={i}>
+                <p>{msg.originalText}</p>
+                {msg.cloudinaryURL?<img key="img" src={msg.cloudinaryURL}/>:""}
+            </li>
         });
         return <ul>{items}</ul>;
     }
     render() {
         return (
             <div className="vbox fill">
-                <div className="scroll grow">
+                <div className="scroll grow" id="scroll">
                     {this.renderHistory()}
                 </div>
                 <div className="hbox">

@@ -15,7 +15,7 @@ var service = {
                 self.fireMessage(message.message);
             }
         });
-        this.pubnub.subscribe({channels:['cloudinary-test']});
+        this.pubnub.subscribe({channels:['make-url']});
         this.imagePath = "sample.jpg";
     },
     setImagePath: function(path) {
@@ -33,18 +33,9 @@ var service = {
         });
     },
     send: function(text) {
-        console.log("text = ",text);
-        var payload = {
-            "transformations": ["w_200","h_350"],
-            "image": "sample.jpg",
-            "cloudName":"pubnub",
-            "operation":"upload",
-            "resource": "image"
-        };
-        console.log('sending', payload);
         this.pubnub.publish({
-            channel:["cloudinary-test"],
-            message: payload
+            channel:["parse-text"],
+            message: { text: text}
         });
     }
 };
