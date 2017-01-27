@@ -63,12 +63,10 @@ class App extends Component {
 
     renderHistory() {
         var items = this.state.messages.map((msg,i)=>{
-            var items = [];
-            items.push(msg.originalText);
-            if(msg.cloudinaryURL) {
-                items.push(<img key='img' src={msg.cloudinaryURL}/>);
-            }
-            return <li key={i}>message: {items}</li>
+            return <li key={i}>
+                <p>{msg.originalText}</p>
+                {msg.cloudinaryURL?<img key="img" src={msg.cloudinaryURL}/>:""}
+            </li>
         });
         return <ul>{items}</ul>;
     }
