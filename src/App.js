@@ -33,14 +33,15 @@ class App extends Component {
         super(props);
         this.state = {
             messages:[],
-            currentText:""
+            currentText:"please overlay acme_logo at the south-west corner"
         };
 
         ImageService.init();
         ImageService.onMessage((msg, messages) => {
             this.setState({
                 messages:messages
-            })
+            });
+            this.scrollDown();
         });
         this.ctx = {};
     }
@@ -53,34 +54,19 @@ class App extends Component {
         }
     }
     sendMessage() {
-        console.log("-------------");
-        var text = this.state.currentText;
-        var action = ParserService.parse(text);
-        console.log("using the action",action);
-        var payload = {
-            text:text
-        };
-        if(action !== false) {
-            this.ctx.path = ImageService.getImagePath();
-            var url = ParserService.actionToURL(action,this.ctx);
-            console.log("got the url",url);
-            payload.cloudinaryLink = url;
-        }
-        //ImageService.send(this.state.currentText);
-        setTimeout(()=>{
-            this.setState({
-                messages:[payload]
-            })
-        },500);
+        ImageService.send(this.state.currentText);
         this.setState({currentText:""});
+    }
+    scrollDown() {
+        //document.getElementById('scroll');
     }
 
     renderHistory() {
         var items = this.state.messages.map((msg,i)=>{
             var items = [];
-            items.push(msg.text);
-            if(msg.cloudinaryLink) {
-                items.push(<img key='img' src={msg.cloudinaryLink}/>);
+            items.push(msg.originalText);
+            if(msg.cloudinaryURL) {
+                items.push(<img key='img' src={msg.cloudinaryURL}/>);
             }
             return <li key={i}>message: {items}</li>
         });
@@ -89,7 +75,7 @@ class App extends Component {
     render() {
         return (
             <div className="vbox fill">
-                <div className="scroll grow">
+                <div className="scroll grow" id="scroll">
                     {this.renderHistory()}
                 </div>
                 <div className="hbox">
