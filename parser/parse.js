@@ -60,6 +60,8 @@ function testParser() {
     test("please overlay the acme_logo in the south-west corner", {
         action:'overlay', target:'acme_logo',direction:'southwest'
     });
+
+    test("please reset the image", { action:'reset'});
 }
 
 var ctx = {path:"sample.jpg"}

@@ -59,6 +59,11 @@ var service = {
             }
         }
 
+        if(verb === 'reset') {
+            return {
+                action:'reset'
+            }
+        }
 
         if(verb === 'make' && nextWord === 'square') {
             console.log("squaring it");
@@ -137,6 +142,9 @@ var service = {
         }
         if(command.action === 'format') {
             context.format = command.format;
+        }
+        if(command.action === 'reset') {
+            context = {};
         }
         if(command.action === 'resize') {
             context.width = command.size;
