@@ -28,5 +28,24 @@ button, input {
   bottom: 0;
   left: 0;
   right: 0;
-  border: 1px solid red;
+  border: 0px solid red;
+}
+
+
+li {
+  background-color: #eeffff;
+}
+li.error {
+  background-color: #ffcccc;
+}
+
+ul {
+  list-style: none;
+  padding:0;
+  margin:0;
+}
+li {
+  border: 0px solid red;
+  padding: 0.25em 0.5em;
+  margin: 0.5em;
 }

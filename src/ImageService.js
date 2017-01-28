@@ -11,11 +11,15 @@ var service = {
         var self = this;
         this.pubnub.addListener({
             message: function(message) {
+                console.log("got message",message);
+                if(message.channel == "parse-text") {
+                    if(message.message.action !== 'error') return;
+                }
                 self.history.push(message.message);
                 self.fireMessage(message.message);
             }
         });
-        this.pubnub.subscribe({channels:['make-url']});
+        this.pubnub.subscribe({channels:['make-url','parse-text']});
         this.imagePath = "sample.jpg";
     },
     setImagePath: function(path) {

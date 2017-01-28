@@ -74,6 +74,12 @@ class App extends Component {
 
     renderHistory() {
         var items = this.state.messages.map((msg,i)=>{
+            if(msg.action && msg.action === 'error') {
+                return <li key={i} className="error">
+                    <p>"{msg.originalText}"</p>
+                    <p>{msg.message}</p>
+                </li>;
+            }
             return <li key={i}>
                 <p>{msg.originalText}</p>
                 {msg.cloudinaryURL?<img key="img" src={msg.cloudinaryURL}/>:""}
