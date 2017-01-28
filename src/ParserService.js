@@ -127,8 +127,11 @@ var service = {
             }
         }
 
-        return true;
 
+        return {
+            action:'error',
+            message:'command not recognized'
+        };
     },
     actionToURL:function(command, context) {
         console.log("analyzing action",command,context);
