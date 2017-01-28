@@ -127,6 +127,17 @@ var service = {
             }
         }
 
+        if(verb === 'use') {
+            var path = nextWord;
+            if(nextWord === 'image') {
+                path = words[n+3];
+            }
+            return {
+                action:"image",
+                path:path
+            }
+        }
+
 
         return {
             action:'error',

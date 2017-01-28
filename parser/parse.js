@@ -62,6 +62,7 @@ function testParser() {
     });
 
     test("please reset the image", { action:'reset'});
+    test("please use image foobar/baz.jpg", { action:'image',path:'foobar/baz.jpg'});
 }
 
 var ctx = {path:"sample.jpg"}
