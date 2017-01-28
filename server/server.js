@@ -9,28 +9,36 @@ var URL = require('url');
 var ParserService = require("../src/ParserService");
 
 var server = http.createServer((req,res) =>{
-    console.log(req.method, req.url);
+    try {
+        console.log(req.method, req.url);
 
-    var url = URL.parse(req.url);
-    console.log("processing",url);
+        var url = URL.parse(req.url,true);
+        console.log("processing", url);
 
-    if(!url.query || url.query === "") return missingText(res);
-    var query = parseQuery(url);
-    if(!query.text) return missingText(res);
+        if (!url.query || !url.query.text) return missingText(res);
 
-    var action = ParserService.parse(query.text);
-    if(action === false) {
-        action = {
-            action:"passthrough"
+        var action = ParserService.parse(url.query.text);
+        if (action === false) {
+            action = {
+                action: "passthrough"
+            }
         }
+        action.originalText = url.query.text;
+        var str = JSON.stringify(action, null, 5);
+        console.log("sending back", str);
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'text/json');
+        res.write(str);
+        res.end();
+    } catch (e) {
+        console.log(e);
+        res.statusCode = 500;
+        res.setHeader('Content-Type', 'text/json');
+        var str = JSON.stringify({action:'error', message:"an error occured with the command parser"}, null, 5);
+        res.write(str);
+        res.end();
     }
-    action.originalText = query.text;
-    var str = JSON.stringify(action,null,5);
-    console.log("sending back",str);
-    res.statusCode = 200;
-    res.setHeader('Content-Type','text/json');
-    res.write(str);
-    res.end();
+
 });
 
 server.on('clientError', (err, socket)=>{
@@ -42,8 +50,8 @@ server.listen(PORT, () => console.log(`server is running on port ${PORT}`));
 
 function missingText(res) {
     res.statusCode = 500;
-    res.setHeader('Content-Type','text/plain');
-    res.write("You must specify a 'text' parameter");
+    res.setHeader('Content-Type','text/json');
+    res.write(JSON.stringify({action:'error',message:"You must specify a 'text' parameter"},null,5));
     res.end();
 }
 

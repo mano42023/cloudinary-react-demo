@@ -29,8 +29,9 @@ support passthrough to not include the cloudinary url
 pull a copy of the block code into the repo
 
 
-* find a demo image that works. like the dress
-* upload an acme logo at a small size, so we don't have to specify the scale
+find a demo image that works. like the dress
+upload an acme logo at a small size, so we don't have to specify the scale
+
  */
 import React, { Component } from 'react';
 import './App.css';
