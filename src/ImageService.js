@@ -24,6 +24,10 @@ var service = {
     },
     setImagePath: function(path) {
         this.imagePath = path;
+        this.pubnub.publish({
+            channel:["parse-text"],
+            message: { text: "please use image " + path}
+        })
     },
     getImagePath: function() {
         return this.imagePath;
