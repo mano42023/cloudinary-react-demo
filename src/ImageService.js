@@ -26,8 +26,14 @@ var service = {
         this.imagePath = path;
         this.pubnub.publish({
             channel:["parse-text"],
-            message: { text: "please use image " + path}
-        })
+            message: {text:"please reset the image"}
+        });
+        setTimeout(() => {
+            this.pubnub.publish({
+                channel:["parse-text"],
+                message: { text: "please use image " + path}
+            })
+        },1000);
     },
     getImagePath: function() {
         return this.imagePath;

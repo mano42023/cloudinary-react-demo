@@ -11,7 +11,7 @@ please set the width to 500
 Since we are all using chrome, please display the image in webp format
 that doesn't look right. please auto-contrast and auto-sharpen
 it should be centered. please make it square and center the dress
-please overlay acme_logo at the south-west corner
+please overlay acmelogo at the south-west corner
 
 
 
@@ -22,11 +22,11 @@ TODOS:
  //make it remember the previously set commands
  //move the parser service into a block
 
-improve error handling for parser service. never crash. send JSON errors only. including error status code that is shown to the user
-support 'please reset the image'
+//improve error handling for parser service. never crash. send JSON errors only. including error //status code that is shown to the user
+//support 'please reset the image'
 support 'north west' and other directions
-support passthrough to not include the cloudinary url
-pull a copy of the block code into the repo
+//support passthrough to not include the cloudinary url
+//pull a copy of the block code into the repo
 
 
 find a demo image that works. like the dress
@@ -42,7 +42,7 @@ class App extends Component {
         super(props);
         this.state = {
             messages:[],
-            currentText:"please overlay acme_logo at the south-west corner"
+            currentText:""
         };
 
         ImageService.init();
