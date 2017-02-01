@@ -56,6 +56,7 @@ function testParser() {
     test("Please overlay acme-logo at south_west corner",{ action:'overlay', target:'acme-logo', direction:'south_west' });
     test("please overlay the acme_logo in the south-west corner", {  action:'overlay', target:'acme_logo',direction:'south_west' });
     test("please overlay foo in the north east corner", {  action:'overlay', target:'foo',direction:'north_east' });
+    test("please overlay foo to the north", {  action:'overlay', target:'foo',direction:'north' });
     test("please reset the image", { action:'reset'});
     test("please use image foobar/baz.jpg", { action:'image',path:'foobar/baz.jpg'});
 }

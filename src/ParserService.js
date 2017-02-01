@@ -86,10 +86,11 @@ function isCompassDirection(dir) {
 function overlay(words) {
     console.log("scanning words",words);
     var imageName = words.shift();
-    var dirwords = words.map((w)=>{ return w.replace("_"," ").replace("-"," "); });
-    dirwords = dirwords.map((w)=>{  return w.split(" ")}).reduce((a,b)=>a.concat(b));
-
-    console.log("final dirwords = ", dirwords);
+    //remove all - and _ and split on spaces, then back to a flat array
+    var dirwords = words
+        .map((w)=> w.replace("_"," ").replace("-"," "))
+        .map((w)=> w.split(" "))
+        .reduce((a,b)=>a.concat(b));
 
     var d1 = dirwords.shift();
     if(isCompassDirection(d1)) {
