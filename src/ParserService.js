@@ -42,7 +42,6 @@ function reset(words) {
         action:'reset'
     }
 }
-
 function useImage(words) {
     var nextWord = words.shift();
     var path = nextWord;
@@ -53,6 +52,30 @@ function useImage(words) {
     }
 
 }
+function setWidth(rest) {
+    return {
+        action: 'resize',
+        size:parseInt(rest[1]),
+        axis:'width'
+    }
+}
+function makeSquare(words) {
+    if(words[1] && words[1] === 'and' && words[2] === 'center') {
+        console.log("centering too");
+        return {
+            action: "crop",
+            gravity:'auto',
+            shape:'square'
+        }
+    }
+    return {
+        action:'crop',
+        gravity:'auto',
+        shape:'square'
+    }
+}
+
+
 var service = {
     parse: function(text) {
         console.log("parsing:",text);
@@ -79,18 +102,7 @@ var service = {
         if(verb === 'show') return show(rest);
         if(verb === 'resize') return resize(rest);
         if(verb === 'reset') return reset(rest);
-
-        if(verb === 'make' && nextWord === 'square') {
-            console.log("squaring it");
-            if(words[n+3] === 'and' && words[n+4] === 'center') {
-                console.log("centering too");
-                return {
-                    action: "crop",
-                    gravity:'auto',
-                    shape:'square'
-                }
-            }
-        }
+        if(verb === 'make' && nextWord === 'square') return makeSquare(rest);
 
         if(nextWord && nextWord === 'and') {
             return {
@@ -101,13 +113,7 @@ var service = {
                 ]
             }
         }
-        if(verb === 'set' && nextWord === 'width') {
-            return {
-                action: 'resize',
-                size:parseInt(words[n+3]),
-                axis:'width'
-            }
-        }
+        if(verb === 'set' && nextWord === 'width') return setWidth(rest);
 
         if(verb === 'set' && nextWord === 'gravity') {
             return {
