@@ -75,6 +75,43 @@ function makeSquare(words) {
     }
 }
 
+function isCompassDirection(dir) {
+    if(dir === 'south') return true;
+    if(dir === 'north') return true;
+    if(dir === 'east') return true;
+    if(dir === 'west') return true;
+    return false;
+}
+
+function overlay(words) {
+    console.log("scanning words",words);
+    var imageName = words.shift();
+    var dirwords = words.map((w)=>{ return w.replace("_"," ").replace("-"," "); });
+    dirwords = dirwords.map((w)=>{  return w.split(" ")}).reduce((a,b)=>a.concat(b));
+
+    console.log("final dirwords = ", dirwords);
+
+    var d1 = dirwords.shift();
+    if(isCompassDirection(d1)) {
+        var d2 = dirwords.shift();
+        if(isCompassDirection(d2)) {
+            return {
+                action:'overlay',
+                target: imageName,
+                direction: `${d1}_${d2}`
+            }
+        } else {
+            return {
+                action:'overlay',
+                target: imageName,
+                direction: d1
+            }
+        }
+    } else {
+        return false;
+    }
+}
+
 
 var service = {
     parse: function(text) {
@@ -83,9 +120,11 @@ var service = {
         var words = text.split(" ")
             .map((w)=>w.toLowerCase())
             .filter((w)=>{
-                if(w === 'the') return false;
+                if(w === 'the')return false;
                 if(w === 'it') return false;
                 if(w === 'to') return false;
+                if(w === 'at') return false;
+                if(w === 'in') return false;
                 return true;
             });
         console.log("words",words);
@@ -131,21 +170,7 @@ var service = {
             }
         }
 
-        if(verb === 'overlay') {
-            console.log("scanning words",words);
-            var dir = words.slice(n).find((w)=>{
-                var ww = w.replace("_","").replace("-","");
-                if(ww == 'southwest') return true;
-                if(ww == 'south_west') return true;
-                if(ww == 'south-west') return true;
-                return false;
-            });
-            return {
-                action:'overlay',
-                target:nextWord,
-                direction:dir.replace("_","").replace("-","")
-            }
-        }
+        if(verb === 'overlay') return overlay(rest);
 
         if(verb === 'use') return useImage(rest);
 

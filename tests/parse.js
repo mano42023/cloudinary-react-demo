@@ -53,16 +53,9 @@ function testParser() {
     test("that doesn't look right. please auto-contrast and auto-sharpen", { action:"compound",  actions:[  { action:'autoContrast' }, { action:"autoSharpen" } ] });
     test("Hmm. It should be centered. Please make it square and center the dress", {  action:"crop", gravity:'auto', shape:'square' });
     test("please make it square", {  action:"crop", gravity:'auto', shape:'square' });
-    return;
-    test("Please overlay acme-logo at south_west corner",{
-        action:'overlay',
-        target:'acme-logo',
-        direction:'southwest'
-    });
-    test("please overlay the acme_logo in the south-west corner", {
-        action:'overlay', target:'acme_logo',direction:'southwest'
-    });
-
+    test("Please overlay acme-logo at south_west corner",{ action:'overlay', target:'acme-logo', direction:'south_west' });
+    test("please overlay the acme_logo in the south-west corner", {  action:'overlay', target:'acme_logo',direction:'south_west' });
+    test("please overlay foo in the north east corner", {  action:'overlay', target:'foo',direction:'north_east' });
     test("please reset the image", { action:'reset'});
     test("please use image foobar/baz.jpg", { action:'image',path:'foobar/baz.jpg'});
 }
@@ -94,9 +87,11 @@ function testActions() {
     ctx = {path:"sample.jpg",width:200};
     testAction({ action:'overlay', target:'acme-logo', direction:'south_west' },
         "http://res.cloudinary.com/pubnub/image/upload/l_sample,w_0.2,g_south_west/w_200/sample.jpg");
+    testAction({ action:'overlay', target:'acme-logo', direction:'north_west' },
+        "http://res.cloudinary.com/pubnub/image/upload/l_sample,w_0.2,g_north_west/w_200/sample.jpg");
 }
 
 
 
 testParser();
-//testActions();
+testActions();
