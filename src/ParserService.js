@@ -1,6 +1,61 @@
+function upload(words) {
+    return {
+        action:'upload',
+        target:words[n+3]
+    }
+}
+function display(words) {
+    var format = words.find((w)=>{
+        if(w === 'webp') return true;
+        if(w === 'jpeg') return true;
+        if(w === 'jpg') return true;
+        return false;
+    });
+    return {
+        action:'format',
+        format:format
+    }
+}
+function show(words) {
+    return {
+        action:'show'
+    }
+}
+function resize(words) {
+    var numberIndex = words.findIndex((w) => {
+        var num = parseInt(w);
+        if(!isNaN(num)) return true;
+        return false;
+    });
+    var axis = words[numberIndex+1];
+    if(axis === 'wide') {
+        axis = 'width';
+    }
+    return {
+        action:'resize',
+        size:parseInt(words[numberIndex]),
+        axis: axis
+    }
+}
+function reset(words) {
+    return {
+        action:'reset'
+    }
+}
+
+function useImage(words) {
+    var nextWord = words.shift();
+    var path = nextWord;
+    if(nextWord === 'image') path = words.shift();
+    return {
+        action:"image",
+        path:path
+    }
+
+}
 var service = {
     parse: function(text) {
-        console.log("parsing",text);
+        console.log("parsing:",text);
 
         var words = text.split(" ")
             .map((w)=>w.toLowerCase())
@@ -16,54 +71,14 @@ var service = {
         var n = words.findIndex((w) => w === 'please');
         var verb = words[n+1];
         var nextWord = words[n+2];
-        console.log("verb = ", n,verb, nextWord);
+        var rest = words.slice(n+2);
+        console.log("verb=", verb, "next=",nextWord, "rest=",rest);
 
-        if(verb === 'upload') {
-            return {
-                action:'upload',
-                target:words[n+3]
-            }
-        }
-        if(verb === 'display') {
-            var format = words.slice(n+1).find((w)=>{
-                if(w === 'webp') return true;
-                if(w === 'jpeg') return true;
-                if(w === 'jpg') return true;
-                return false;
-            });
-            return {
-                action:'format',
-                format:format
-            }
-        }
-        if(verb === 'show') {
-            return {
-                action:'show'
-            }
-        }
-
-        if(verb === 'resize') {
-            var numberIndex = words.slice(n+1).findIndex((w) => {
-                var num = parseInt(w);
-                if(!isNaN(num)) return true;
-                return false;
-            });
-            var axis = words.slice(n+1)[numberIndex+1];
-            if(axis === 'wide') {
-                axis = 'width';
-            }
-            return {
-                action:'resize',
-                size:parseInt(words.slice(n+1)[numberIndex]),
-                axis: axis
-            }
-        }
-
-        if(verb === 'reset') {
-            return {
-                action:'reset'
-            }
-        }
+        if(verb === 'upload') return upload(words);
+        if(verb === 'display') return display(rest);
+        if(verb === 'show') return show(rest);
+        if(verb === 'resize') return resize(rest);
+        if(verb === 'reset') return reset(rest);
 
         if(verb === 'make' && nextWord === 'square') {
             console.log("squaring it");
@@ -86,7 +101,6 @@ var service = {
                 ]
             }
         }
-
         if(verb === 'set' && nextWord === 'width') {
             return {
                 action: 'resize',
@@ -127,17 +141,7 @@ var service = {
             }
         }
 
-        if(verb === 'use') {
-            var path = nextWord;
-            if(nextWord === 'image') {
-                path = words[n+3];
-            }
-            return {
-                action:"image",
-                path:path
-            }
-        }
-
+        if(verb === 'use') return useImage(rest);
 
         return {
             action:'error',
