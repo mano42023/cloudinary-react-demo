@@ -55,9 +55,6 @@ export default (request) => {
         var scale = 1.0;
         scale = 0.2;
         var grav = command.direction;
-        if(command.direction === 'southwest') {
-            grav = 'south_west';
-        }
         transforms.push("l_"+fname+",w_"+scale+",g_"+grav);
     }
 
