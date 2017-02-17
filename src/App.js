@@ -67,9 +67,17 @@ class App extends Component {
         this.setState({currentText:""});
     }
     scrollDown() {
-        setTimeout(()=>{
-            document.getElementById('scroll').scrollTop = 100000;
-        },100);
+        function move(delay) {
+            setTimeout(()=>{
+                var elm = document.getElementById('scroll');
+                elm.scrollTop = elm.scrollHeight;
+            },delay);
+        }
+        move(100);
+        move(500);
+        move(1000);
+        move(1500);
+        move(2000);
     }
 
     renderHistory() {

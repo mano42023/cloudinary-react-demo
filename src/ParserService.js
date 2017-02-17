@@ -1,4 +1,4 @@
-function upload(words) {
+function upload(words,n) {
     return {
         action:'upload',
         target:words[n+3]
@@ -137,7 +137,7 @@ var service = {
         var rest = words.slice(n+2);
         console.log("verb=", verb, "next=",nextWord, "rest=",rest);
 
-        if(verb === 'upload') return upload(words);
+        if(verb === 'upload') return upload(words,n);
         if(verb === 'display') return display(rest);
         if(verb === 'show') return show(rest);
         if(verb === 'resize') return resize(rest);
